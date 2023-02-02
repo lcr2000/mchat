@@ -1,0 +1,30 @@
+---
+
+run:
+  deadline: 5m
+
+output:
+  sort-results: true
+
+linters:
+  enable:
+    - deadcode
+    - depguard
+    - durationcheck
+    - errorlint
+    - exportloopref
+    - gofmt
+    - gofumpt
+    - goimports
+    - gosimple
+    - ineffassign
+    - misspell
+    - nolintlint
+    - predeclared
+    - revive
+    - staticcheck
+    - structcheck
+    - unconvert
+    - unused
+    - varcheck
+    - wastedassign
