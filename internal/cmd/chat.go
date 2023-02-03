@@ -109,7 +109,7 @@ func (c *ChatCommand) process() error {
 		if inputInfo == "" {
 			continue
 		}
-		if strings.ToUpper(inputInfo) == "q" { // Exit if enter q.
+		if strings.ToUpper(inputInfo) == "Q" { // Exit if enter Q.
 			return nil
 		}
 		packet := model.BuildClientPacket(model.CmdChat, inputInfo)
