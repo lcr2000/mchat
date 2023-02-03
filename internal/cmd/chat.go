@@ -37,13 +37,13 @@ func (c *ChatCommand) Init() {
 }
 
 func (c *ChatCommand) runChat(command *cobra.Command, args []string) error {
-	fmt.Println("Enter the server address.")
+	fmt.Println("Input the server address.")
 	address := utils.PromptUI("address", "127.0.0.1")
 
 	var username string
 
 	for {
-		fmt.Println("Enter your username.")
+		fmt.Println("Input your username.")
 		username = utils.PromptUI("username", "")
 		err := c.login(address, username)
 		if err == nil {

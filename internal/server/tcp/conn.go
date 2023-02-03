@@ -80,7 +80,7 @@ func (c *Conn) distribute(b []byte) error {
 	case model.CmdGuess:
 		data := p.Data.(string)
 		if data == "" {
-			packet := model.BuildServerPacket(p.Cmd, model.ErrCodeBadParams, "Enter the correct number.")
+			packet := model.BuildServerPacket(p.Cmd, model.ErrCodeBadParams, "Input the correct number.")
 			marshal, _ := json.Marshal(packet)
 			if _, err := c.rawConn.Write(marshal); err != nil {
 				fmt.Printf("write to client failed, err: %v\n", err)

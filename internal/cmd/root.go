@@ -21,7 +21,7 @@ func NewCli() *Cli {
 	cli := &Cli{
 		rootCmd: &cobra.Command{
 			Use:   "mchat",
-			Short: "Enjoy the mini game.",
+			Short: "Chat with others in the terminal.",
 			Long:  printLogo(),
 		},
 	}
@@ -37,12 +37,12 @@ func (cli *Cli) setFlags() {
 	flags.IntVar(&uiSize, "ui-size", 4, "number of list items to show in menu at once")
 }
 
-var Logo = "\n  __  __  ____                      \n |  \\/  |/ ___| __ _ _ __ ___   ___ \n | |\\/| | |  _ / _` | '_ ` _ \\ / _ \\\n | |  | | |_| | (_| | | | | | |  __/\n |_|  |_|\\____|\\__,_|_| |_| |_|\\___|\n                                    \n"
+var Logo = "\n                 _           _   \n  _ __ ___   ___| |__   __ _| |_ \n | '_ ` _ \\ / __| '_ \\ / _` | __|\n | | | | | | (__| | | | (_| | |_ \n |_| |_| |_|\\___|_| |_|\\__,_|\\__|\n                                 \n"
 
 func printLogo() string {
 	panel := pterm.DefaultHeader.WithMargin(8).
 		WithBackgroundStyle(pterm.NewStyle(pterm.BgLightBlue)).
-		WithTextStyle(pterm.NewStyle(pterm.FgLightWhite)).Sprint("Enjoy the mini game.")
+		WithTextStyle(pterm.NewStyle(pterm.FgLightWhite)).Sprint("Chat with others in the terminal.")
 	logo := pterm.FgLightGreen.Sprint(Logo)
 	pterm.Info.Prefix = pterm.Prefix{
 		Text:  "Tips",
