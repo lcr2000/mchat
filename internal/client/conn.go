@@ -71,3 +71,7 @@ func (c *Conn) process(b []byte) {
 	case model.CmdChatEnter: // No need to do anything.
 	}
 }
+
+func (c *Conn) Active() {
+	c.lastActiveTs = time.Now().Unix()
+}
