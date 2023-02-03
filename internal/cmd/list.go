@@ -33,18 +33,18 @@ func (c *ListOnlineCommand) Init() {
 }
 
 func (c *ListOnlineCommand) run(command *cobra.Command, args []string) error {
-	users, err := c.getOnlineUsers()
+	resp, err := c.getOnlineUsers()
 	if err != nil {
 		return err
 	}
 	var count int
 	var table [][]string
-	for _, user := range users {
-		conTmp := []string{user.UID, user.City, utils.TimeFormat(user.LastActiveTs)}
+	for _, user := range resp.Data {
+		conTmp := []string{user.UID, user.City, user.IP, utils.TimeFormat(user.LastActiveTs)}
 		count++
 		table = append(table, conTmp)
 	}
-	err = utils.PrintTable(table, []string{"Name", "City", "LatActiveTime"})
+	err = utils.PrintTable(table, []string{"Name", "City", "IP", "LatActiveTime"})
 	if err != nil {
 		return err
 	}
@@ -54,25 +54,20 @@ func (c *ListOnlineCommand) run(command *cobra.Command, args []string) error {
 	return nil
 }
 
-func (c *ListOnlineCommand) getOnlineUsers() ([]*model.User, error) {
+func (c *ListOnlineCommand) getOnlineUsers() (*model.GetOnlineUsersResp, error) {
 	bytes, err := utils.HTTPGet(fmt.Sprintf("http://%s:%s/get_online_users", config.Cfg.Address, config.Cfg.HTTPPort))
 	if err != nil {
 		return nil, err
 	}
-	resp := &model.HTTPResponse{}
+	resp := &model.GetOnlineUsersResp{}
 	err = json.Unmarshal(bytes, &resp)
 	if err != nil {
 		return nil, err
 	}
-	if resp.Code != model.ErrCodeSuccess {
+	if resp.Code != int(model.ErrCodeSuccess) {
 		return nil, errors.New(resp.Msg)
 	}
-	var user []*model.User
-	err = json.Unmarshal([]byte(resp.Data.(string)), &user)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return resp, nil
 }
 
 func (c *ListOnlineCommand) example() string {

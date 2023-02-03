@@ -35,10 +35,6 @@ type LoginRequest struct {
 	Username string `json:"username"`
 }
 
-type GetOnlineUsersResp struct {
-	Users []*User `json:"users"`
-}
-
 type User struct {
 	IP           string `json:"ip"`             // IP
 	AreaCode     string `json:"area_code"`      // IP 所在国家/地区码
@@ -47,4 +43,18 @@ type User struct {
 	City         string `json:"city"`           // IP 所在城市
 	UID          string `json:"uid"`            // 用户ID
 	LastActiveTs int64  `json:"last_active_ts"` // 最后活跃时间
+}
+
+type GetOnlineUsersResp struct {
+	Msg  string `json:"msg"`
+	Code int    `json:"code"`
+	Data []struct {
+		IP           string `json:"ip"`
+		AreaCode     string `json:"area_code"`
+		Country      string `json:"country"`
+		Province     string `json:"province"`
+		City         string `json:"city"`
+		UID          string `json:"uid"`
+		LastActiveTs int64  `json:"last_active_ts"`
+	} `json:"data"`
 }

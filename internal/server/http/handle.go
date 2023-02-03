@@ -34,5 +34,5 @@ func getOnlineUsersHandle(c *gin.Context) {
 			LastActiveTs: conn.GetLastActiveTs(),
 		})
 	}
-	model.SuccessResponse(c, model.GetOnlineUsersResp{Users: users})
+	model.SuccessResponse(c, users)
 }
