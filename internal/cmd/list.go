@@ -17,7 +17,7 @@ type ListOnlineCommand struct {
 	BaseCommand
 }
 
-// Init ListCommand
+// Init ListOnlineCommand
 func (c *ListOnlineCommand) Init() {
 	c.command = &cobra.Command{
 		Use:     "list online",
@@ -25,14 +25,14 @@ func (c *ListOnlineCommand) Init() {
 		Long:    "List online users",
 		Aliases: []string{"lo"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return c.run(cmd, args)
+			return c.run()
 		},
 		Example: c.example(),
 	}
 	c.command.DisableFlagsInUseLine = true
 }
 
-func (c *ListOnlineCommand) run(command *cobra.Command, args []string) error {
+func (c *ListOnlineCommand) run() error {
 	resp, err := c.getOnlineUsers()
 	if err != nil {
 		return err

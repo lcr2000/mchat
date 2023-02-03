@@ -30,14 +30,14 @@ func (c *ChatCommand) Init() {
 		Long:    "Chat with other",
 		Aliases: []string{"c"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return c.runChat(cmd, args)
+			return c.run()
 		},
-		Example: chatExample(),
+		Example: c.example(),
 	}
 	c.command.DisableFlagsInUseLine = true
 }
 
-func (c *ChatCommand) runChat(command *cobra.Command, args []string) error {
+func (c *ChatCommand) run() error {
 	var username string
 
 	for {
@@ -120,7 +120,7 @@ func (c *ChatCommand) process() error {
 	}
 }
 
-func chatExample() string {
+func (c *ChatCommand) example() string {
 	return `
 # Chat with other
 mchat chat

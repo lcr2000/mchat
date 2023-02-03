@@ -14,7 +14,7 @@ type StartCommand struct {
 	BaseCommand
 }
 
-// Init ListCommand
+// Init StartCommand
 func (c *StartCommand) Init() {
 	c.command = &cobra.Command{
 		Use:     "start",
@@ -22,14 +22,14 @@ func (c *StartCommand) Init() {
 		Long:    "Start the server",
 		Aliases: []string{"s"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return c.runStart(cmd, args)
+			return c.run()
 		},
-		Example: startExample(),
+		Example: c.example(),
 	}
 	c.command.DisableFlagsInUseLine = true
 }
 
-func (c *StartCommand) runStart(command *cobra.Command, args []string) error {
+func (c *StartCommand) run() error {
 	server.StartServer()
 	inputReader := bufio.NewReader(os.Stdin)
 	for {
@@ -41,7 +41,7 @@ func (c *StartCommand) runStart(command *cobra.Command, args []string) error {
 	}
 }
 
-func startExample() string {
+func (c *StartCommand) example() string {
 	return `
 # Start the server
 mchat start
