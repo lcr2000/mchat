@@ -69,9 +69,9 @@ func HashSufString(data string) string {
 }
 
 // PrintTable generate table
-func PrintTable(table interface{}) error {
+func PrintTable(table interface{}, headers []string) error {
 	tabulate := gotabulate.Create(table)
-	tabulate.SetHeaders([]string{"CURRENT", "NAME", "STAR", "WATCH", "FORK", "LANGUAGE", "URL", "DESC"})
+	tabulate.SetHeaders(headers)
 	// Turn On String Wrapping
 	tabulate.SetWrapStrings(true)
 	// Render the table
@@ -163,27 +163,6 @@ func BoolUI(label string, uiSize int) string {
 	return obj
 }
 
-// MoreInfo output more info
-func MoreInfo(kv map[string]interface{}) error {
-	//timeout := int64(2)
-	//ctx := context.TODO()
-	//nodesList, err := clientSet.CoreV1().Nodes().List(ctx, metav1.ListOptions{TimeoutSeconds: &timeout})
-	//if err != nil {
-	//	return err
-	//}
-	//podsList, err := clientSet.CoreV1().Pods("").List(ctx, metav1.ListOptions{TimeoutSeconds: &timeout})
-	//if err != nil {
-	//	return err
-	//}
-	//nsList, err := clientSet.CoreV1().Namespaces().List(ctx, metav1.ListOptions{TimeoutSeconds: &timeout})
-	//if err != nil {
-	//	return err
-	//}
-
-	printKV(os.Stdout, "[Summary] ", kv)
-	return nil
-}
-
 // ExitOption exit option of SelectUI
 func ExitOption(kubeItems []Needle) []Needle {
 	kubeItems = append(kubeItems, Needle{Name: "<Exit>", Desc: "exit the githubcm"})
@@ -201,7 +180,7 @@ func printService(out io.Writer, name, link string) {
 	fmt.Fprintln(out, "")
 }
 
-func printKV(out io.Writer, prefix string, kv map[string]interface{}) {
+func PrintKV(out io.Writer, prefix string, kv map[string]interface{}) {
 	ct.ChangeColor(ct.Green, false, ct.None, false)
 	fmt.Fprint(out, prefix)
 	ct.ResetColor()
