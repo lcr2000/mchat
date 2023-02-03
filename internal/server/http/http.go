@@ -11,6 +11,7 @@ import (
 func InitHTTPServer() {
 	router := gin.Default()
 	router.POST("/login", loginHandle)
+	router.GET("/get_online_users", getOnlineUsersHandle)
 
 	err := router.Run(fmt.Sprintf(":%s", config.Cfg.HTTPPort))
 	if err != nil {

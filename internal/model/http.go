@@ -34,3 +34,17 @@ func respondWithJSON(ctx *gin.Context, h HTTPResponse) {
 type LoginRequest struct {
 	Username string `json:"username"`
 }
+
+type GetOnlineUsersResp struct {
+	Users []*User `json:"users"`
+}
+
+type User struct {
+	IP           string `json:"ip"`             // IP
+	AreaCode     string `json:"area_code"`      // IP 所在国家/地区码
+	Country      string `json:"country"`        // IP 所在国家/地区
+	Province     string `json:"province"`       // IP 所在省份
+	City         string `json:"city"`           // IP 所在城市
+	UID          string `json:"uid"`            // 用户ID
+	LastActiveTs int64  `json:"last_active_ts"` // 最后活跃时间
+}
