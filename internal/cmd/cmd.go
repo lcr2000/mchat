@@ -9,6 +9,7 @@ func NewBaseCommand() *BaseCommand {
 	baseCmd.AddCommands(
 		&StartCommand{},
 		&ChatCommand{},
+		&ListOnlineCommand{},
 	)
 
 	return baseCmd
