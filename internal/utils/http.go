@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	connTimeout    = 5  // 连接超时时间
-	defaultTimeout = 10 // 请求超时时间,一般大于连接超时时间
+	connTimeout    = 5
+	defaultTimeout = 10
 )
 
 var HTTPClient = &http.Client{
@@ -24,14 +24,14 @@ var HTTPClient = &http.Client{
 func transport(connTimeout int) *http.Transport {
 	dialer := &net.Dialer{
 		Timeout:   time.Second * time.Duration(connTimeout),
-		KeepAlive: time.Second * 10, // 这个是检测心跳的时间间隔
+		KeepAlive: time.Second * 10,
 	}
 	return &http.Transport{
-		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true}, // 不校验服务端证书
+		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 		MaxIdleConns:        100,
-		MaxConnsPerHost:     200,              // 限制每个host最大连接数
-		MaxIdleConnsPerHost: 5,                // 空闲时维持的最大连接数, 默认2个
-		IdleConnTimeout:     90 * time.Second, // 连接空闲超时, 跟DefaultTransport值一致，它用于控制一个闲置连接在连接池中的保留时间
+		MaxConnsPerHost:     200,
+		MaxIdleConnsPerHost: 50,
+		IdleConnTimeout:     600 * time.Second,
 		DialContext:         dialer.DialContext,
 	}
 }
