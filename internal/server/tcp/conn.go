@@ -40,8 +40,11 @@ func NewConn(conn net.Conn) *Conn {
 }
 
 func (c *Conn) process() {
-	defer c.rawConn.Close()
-	defer connMgr.Remove(c.uid)
+	defer func() {
+		defer c.rawConn.Close()
+		defer connMgr.Remove(c.uid)
+	}()
+
 	for {
 		var buf [128]byte
 		n, err := c.rawConn.Read(buf[:])
