@@ -113,7 +113,7 @@ func SelectUI(kubeItems []Needle, label string, uiSize int) int {
 	}
 	i, _, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatalf("Prompt fail %v\n", err)
 	}
 	if kubeItems[i].Name == "<Exit>" {
 		fmt.Println("Exited.")
@@ -137,7 +137,7 @@ func PromptUI(label string, name string) string {
 	}
 	result, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatalf("Prompt fail %v\n", err)
 	}
 	return result
 }
@@ -158,7 +158,7 @@ func BoolUI(label string, uiSize int) string {
 	}
 	_, obj, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatalf("Prompt fail %v\n", err)
 	}
 	return obj
 }

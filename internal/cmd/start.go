@@ -2,13 +2,10 @@ package cmd
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strings"
 
-	"github.com/lcr2000/mchat/internal/server/http"
-	"github.com/lcr2000/mchat/internal/server/tcp"
-
+	"github.com/lcr2000/mchat/internal/server"
 	"github.com/spf13/cobra"
 )
 
@@ -33,9 +30,7 @@ func (c *StartCommand) Init() {
 }
 
 func (c *StartCommand) runStart(command *cobra.Command, args []string) error {
-	fmt.Println("Start the server.")
-	go http.InitHTTPServer()
-	go tcp.InitTCPServer()
+	server.StartServer()
 	inputReader := bufio.NewReader(os.Stdin)
 	for {
 		input, _ := inputReader.ReadString('\n') // Read user input.

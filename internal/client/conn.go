@@ -41,7 +41,7 @@ func (c *Conn) read() {
 		buf := [512]byte{}
 		n, err := c.rawConn.Read(buf[:])
 		if err != nil {
-			fmt.Println("receive data failed, err:", err)
+			fmt.Println("receive data fail, err=", err)
 			return
 		}
 		// fmt.Println(string(buf[:n]))
@@ -53,7 +53,7 @@ func (c *Conn) process(b []byte) {
 	var p *model.ServerPacket
 	err := json.Unmarshal(b, &p)
 	if err != nil {
-		fmt.Println("Unmarshal failed, err:", err)
+		fmt.Println("Unmarshal fail, err=", err)
 		return
 	}
 
@@ -63,7 +63,7 @@ func (c *Conn) process(b []byte) {
 		var chatMsg *model.ChatMsg
 		err = json.Unmarshal([]byte(p.Data.(string)), &chatMsg)
 		if err != nil {
-			fmt.Println("Unmarshal failed1, err:", err)
+			fmt.Println("Unmarshal fail, err=", err)
 			return
 		}
 		utils.PrintYellow(os.Stdout, fmt.Sprintf("%s %s  ", chatMsg.FromName, utils.TimeFormat(chatMsg.ServerTs)))

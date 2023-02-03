@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/lcr2000/mchat/internal/client"
+	"github.com/lcr2000/mchat/internal/config"
 	"github.com/lcr2000/mchat/internal/model"
 	"github.com/lcr2000/mchat/internal/utils"
 	"github.com/spf13/cobra"
@@ -37,23 +38,19 @@ func (c *ChatCommand) Init() {
 }
 
 func (c *ChatCommand) runChat(command *cobra.Command, args []string) error {
-	fmt.Println("Input the server address.")
-	address := utils.PromptUI("address", "127.0.0.1")
-
 	var username string
 
 	for {
 		fmt.Println("Input your username.")
 		username = utils.PromptUI("username", "")
-		err := c.login(address, username)
+		err := c.login(username)
 		if err == nil {
 			break
 		}
 		utils.PrintWarning(os.Stdout, fmt.Sprintf("%s.\n", err.Error()))
 	}
 
-	client.Dial(address, username)
-	fmt.Println("Connect to the server.")
+	client.Dial(username)
 
 	err := c.enter(username)
 	if err != nil {
@@ -66,7 +63,7 @@ func (c *ChatCommand) runChat(command *cobra.Command, args []string) error {
 	return c.process()
 }
 
-func (c *ChatCommand) login(address, username string) error {
+func (c *ChatCommand) login(username string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	req := struct {
@@ -75,7 +72,8 @@ func (c *ChatCommand) login(address, username string) error {
 		Username: username,
 	}
 	marshal, _ := json.Marshal(req)
-	bytes, err := utils.HTTPPostWithContext(ctx, fmt.Sprintf("http://%s:8080/login", address), "application/json", string(marshal))
+	loginURL := fmt.Sprintf("http://%s:%s/login", config.Cfg.Address, config.Cfg.HTTPPort)
+	bytes, err := utils.HTTPPostWithContext(ctx, loginURL, "application/json", string(marshal))
 	if err != nil {
 		return err
 	}

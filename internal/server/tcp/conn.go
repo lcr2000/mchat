@@ -46,13 +46,13 @@ func (c *Conn) process() {
 		var buf [128]byte
 		n, err := c.rawConn.Read(buf[:])
 		if err != nil {
-			fmt.Printf("read from connect failed, err: %v\n", err)
+			fmt.Printf("read from connect fail, err= %v\n", err)
 			break
 		}
 		// fmt.Printf("receive from client, data: %v\n", string(buf[:n]))
 		err = c.distribute(buf[:n])
 		if err != nil {
-			fmt.Printf("processHandle failed, err: %v\n", err)
+			fmt.Printf("processHandle fail, err= %v\n", err)
 			if err = c.serverError(); err != nil {
 				break
 			}
@@ -63,7 +63,7 @@ func (c *Conn) process() {
 func (c *Conn) distribute(b []byte) error {
 	var p *model.ClientPacket
 	if err := json.Unmarshal(b, &p); err != nil {
-		fmt.Printf("Unmarshal failed, err: %v\n", err)
+		fmt.Printf("distribute Unmarshal fail, err= %v\n", err)
 		return nil
 	}
 
@@ -72,7 +72,7 @@ func (c *Conn) distribute(b []byte) error {
 		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, "Ready.")
 		marshal, _ := json.Marshal(packet)
 		if _, err := c.rawConn.Write(marshal); err != nil {
-			fmt.Printf("write to client failed, err: %v\n", err)
+			fmt.Printf("write to client fail, err= %v\n", err)
 			return err
 		}
 	case model.CmdChatEnter:
@@ -82,7 +82,7 @@ func (c *Conn) distribute(b []byte) error {
 		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, "Success.")
 		marshal, _ := json.Marshal(packet)
 		if _, err := c.rawConn.Write(marshal); err != nil {
-			fmt.Printf("write to client failed, err: %v\n", err)
+			fmt.Printf("write to client fail, err= %v\n", err)
 			return err
 		}
 		// Send welcome message.
@@ -98,7 +98,7 @@ func (c *Conn) distribute(b []byte) error {
 		marshal, _ = json.Marshal(packet)
 		for _, conn := range connMgr.GetAll() {
 			if _, err := conn.rawConn.Write(marshal); err != nil {
-				fmt.Printf("write to client failed, err: %v\n", err)
+				fmt.Printf("write to client fail, err= %v\n", err)
 				continue
 			}
 		}
@@ -118,7 +118,7 @@ func (c *Conn) distribute(b []byte) error {
 				continue // No need to forward to sender.
 			}
 			if _, err := conn.rawConn.Write(marshal); err != nil {
-				fmt.Printf("write to client failed, err: %v\n", err)
+				fmt.Printf("write to client fail, err= %v\n", err)
 				continue
 			}
 		}
@@ -135,7 +135,7 @@ func (c *Conn) serverError() error {
 	}
 	marshal, _ := json.Marshal(p)
 	if _, err := c.rawConn.Write(marshal); err != nil {
-		fmt.Printf("process write to client failed, err: %v\n", err)
+		fmt.Printf("process write to client fail, err= %v\n", err)
 		return err
 	}
 	return nil
