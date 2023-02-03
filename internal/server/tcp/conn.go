@@ -106,6 +106,7 @@ func (c *Conn) distribute(b []byte) error {
 			}
 		}
 	case model.CmdChat:
+		c.lastActiveTs = time.Now().Unix()
 		chatMsg := &model.ChatMsg{
 			FromID:   c.uid,
 			FromName: c.uid,
