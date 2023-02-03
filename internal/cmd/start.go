@@ -38,9 +38,9 @@ func (c *StartCommand) runStart(command *cobra.Command, args []string) error {
 	go tcp.InitTCPServer()
 	inputReader := bufio.NewReader(os.Stdin)
 	for {
-		input, _ := inputReader.ReadString('\n') // 读取用户输入
+		input, _ := inputReader.ReadString('\n') // Read user input.
 		inputInfo := strings.Trim(input, "\r\n")
-		if strings.ToUpper(inputInfo) == "Q" { // 如果输入q就退出
+		if strings.ToUpper(inputInfo) == "Q" { // Exit if enter Q.
 			return nil
 		}
 	}
