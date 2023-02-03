@@ -6,9 +6,8 @@ type Cmd int
 
 const (
 	CmdReady     Cmd = 1
-	CmdGuess     Cmd = 2
-	CmdChatEnter Cmd = 3
-	CmdChat      Cmd = 4
+	CmdChatEnter Cmd = 2
+	CmdChat      Cmd = 3
 )
 
 type ErrCode int

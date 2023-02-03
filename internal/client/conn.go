@@ -59,8 +59,6 @@ func (c *Conn) process(b []byte) {
 
 	switch p.Cmd {
 	case model.CmdReady:
-	case model.CmdGuess:
-		fmt.Println(p.Data)
 	case model.CmdChat:
 		var chatMsg *model.ChatMsg
 		err = json.Unmarshal([]byte(p.Data.(string)), &chatMsg)

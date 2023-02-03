@@ -3,13 +3,11 @@ package tcp
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"net"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/lcr2000/mchat/internal/model"
-	"github.com/spf13/cast"
 )
 
 type Conn struct {
@@ -72,31 +70,6 @@ func (c *Conn) distribute(b []byte) error {
 	switch p.Cmd {
 	case model.CmdReady:
 		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, "Ready.")
-		marshal, _ := json.Marshal(packet)
-		if _, err := c.rawConn.Write(marshal); err != nil {
-			fmt.Printf("write to client failed, err: %v\n", err)
-			return err
-		}
-	case model.CmdGuess:
-		data := p.Data.(string)
-		if data == "" {
-			packet := model.BuildServerPacket(p.Cmd, model.ErrCodeBadParams, "Input the correct number.")
-			marshal, _ := json.Marshal(packet)
-			if _, err := c.rawConn.Write(marshal); err != nil {
-				fmt.Printf("write to client failed, err: %v\n", err)
-				return err
-			}
-			return nil
-		}
-		var tips string
-		number := cast.ToInt(data)
-		random := rand.Intn(10)
-		if number == random {
-			tips = "Excellent! Guess right."
-		} else {
-			tips = fmt.Sprintf("Your input is %d, the result is %d.", number, random)
-		}
-		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, tips)
 		marshal, _ := json.Marshal(packet)
 		if _, err := c.rawConn.Write(marshal); err != nil {
 			fmt.Printf("write to client failed, err: %v\n", err)
