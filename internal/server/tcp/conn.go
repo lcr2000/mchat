@@ -140,3 +140,15 @@ func (c *Conn) serverError() error {
 	}
 	return nil
 }
+
+func (c *Conn) GetCity() string {
+	return c.city
+}
+
+func (c *Conn) GetUID() string {
+	return c.uid
+}
+
+func (c *Conn) GetLastActiveTs() int64 {
+	return c.lastActiveTs
+}
