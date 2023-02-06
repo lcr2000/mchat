@@ -41,8 +41,8 @@ func NewConn(conn net.Conn) *Conn {
 
 func (c *Conn) process() {
 	defer func() {
-		defer c.rawConn.Close()
-		defer connMgr.Remove(c.uid)
+		c.Close()
+		SendAllExcept(c.uid, buildSysChatMsgBytes(fmt.Sprintf("%s Exit.", c.uid)))
 	}()
 
 	for {
@@ -55,10 +55,8 @@ func (c *Conn) process() {
 		// fmt.Printf("receive from client, data: %v\n", string(buf[:n]))
 		err = c.distribute(buf[:n])
 		if err != nil {
-			fmt.Printf("processHandle fail, err= %v\n", err)
-			if err = c.serverError(); err != nil {
-				break
-			}
+			fmt.Printf("distribute fail, err= %v\n", err)
+			break
 		}
 	}
 }
@@ -79,32 +77,14 @@ func (c *Conn) distribute(b []byte) error {
 			return err
 		}
 	case model.CmdChatEnter:
-		username := p.Data.(string)
-		c.uid = username
-		connMgr.Add(username, c)
+		c.uid = p.Data.(string)
 		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, "Success.")
 		marshal, _ := json.Marshal(packet)
 		if _, err := c.rawConn.Write(marshal); err != nil {
 			fmt.Printf("write to client fail, err= %v\n", err)
 			return err
 		}
-		// Send welcome message.
-		chatMsg := &model.ChatMsg{
-			FromID:   model.SYStemName,
-			FromName: model.SYStemName,
-			MsgID:    uuid.New().String(),
-			Data:     fmt.Sprintf("Welcome %s.", username),
-			ServerTs: time.Now().Unix(),
-		}
-		bytes, _ := json.Marshal(chatMsg)
-		packet = model.BuildServerPacket(model.CmdChat, model.ErrCodeSuccess, string(bytes))
-		marshal, _ = json.Marshal(packet)
-		for _, conn := range connMgr.GetAll() {
-			if _, err := conn.rawConn.Write(marshal); err != nil {
-				fmt.Printf("write to client fail, err= %v\n", err)
-				continue
-			}
-		}
+		SendAll(buildSysChatMsgBytes(fmt.Sprintf("Welcome %s.", p.Data.(string))))
 	case model.CmdChat:
 		c.lastActiveTs = time.Now().Unix()
 		chatMsg := &model.ChatMsg{
@@ -117,32 +97,15 @@ func (c *Conn) distribute(b []byte) error {
 		bytes, _ := json.Marshal(chatMsg)
 		packet := model.BuildServerPacket(p.Cmd, model.ErrCodeSuccess, string(bytes))
 		marshal, _ := json.Marshal(packet)
-		for _, conn := range connMgr.GetAll() {
-			if c.uid == conn.uid {
-				continue // No need to forward to sender.
-			}
-			if _, err := conn.rawConn.Write(marshal); err != nil {
-				fmt.Printf("write to client fail, err= %v\n", err)
-				continue
-			}
-		}
+		SendAllExcept(c.uid, marshal)
 	}
 
 	return nil
 }
 
-func (c *Conn) serverError() error {
-	p := &model.ServerPacket{
-		ErrCode: model.ErrCodeServerError,
-		Data:    nil,
-		Ts:      0,
-	}
-	marshal, _ := json.Marshal(p)
-	if _, err := c.rawConn.Write(marshal); err != nil {
-		fmt.Printf("process write to client fail, err= %v\n", err)
-		return err
-	}
-	return nil
+func (c *Conn) Close() {
+	c.rawConn.Close()
+	connMgr.Remove(c.cid)
 }
 
 func (c *Conn) GetCity() string {

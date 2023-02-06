@@ -25,6 +25,7 @@ func InitTCPServer() {
 			continue
 		}
 		conn := NewConn(rawConn)
+		connMgr.Add(conn.cid, conn)
 		go conn.process()
 	}
 }
