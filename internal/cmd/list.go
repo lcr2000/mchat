@@ -44,12 +44,14 @@ func (c *ListOnlineCommand) run() error {
 		count++
 		table = append(table, conTmp)
 	}
-	err = utils.PrintTable(table, []string{"Name", "City", "IP", "LatActiveTime"})
-	if err != nil {
-		return err
+	if len(table) != 0 {
+		err = utils.PrintTable(table, []string{"Name", "City", "IP", "LastActiveTime"})
+		if err != nil {
+			return err
+		}
 	}
 	utils.PrintKV(os.Stdout, "[Summary] ", map[string]interface{}{
-		"online_count": count,
+		"count": count,
 	})
 	return nil
 }
